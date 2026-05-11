@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MilkRoot Goioxim | Conexão Vital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="loader">Laticínios de Goioxim carregando...</div>
+
+    <header>
+        <div class="logo">MILK<span>ROOT</span></div>
+        <nav>
+            <a href="#rastreabilidade">Rastrear</a>
+            <a href="#jogo">Desafio</a>
+            <a href="#ods">Impacto ODS</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Ouro Branco de <span>Goioxim</span></h1>
+            <p>Tecnologia e tradição unidas para alimentar o futuro da agricultura familiar.</p>
+            <a href="#rastreabilidade" class="btn-main">Explorar Jornada</a>
+        </div>
+    </section>
+
+    <!-- NOVIDADE: RASTREABILIDADE INTERATIVA -->
+    <section id="rastreabilidade" class="section">
+        <h2>Jornada Transparente</h2>
+        <p>Simule o escaneamento de um lote e veja a origem do leite:</p>
+        <div class="scanner-container">
+            <div class="scanner-box" id="scanner">
+                <div class="line"></div>
+                <p id="status-scan">Aguardando Lote...</p>
+            </div>
+            <div class="info-card" id="info-lote">
+                <h3>Lote: #GOI2026</h3>
+                <p><strong>Origem:</strong> Linha Pinhalzinho</p>
+                <p><strong>Produtor:</strong> Cooperativa Local</p>
+                <p><strong>Qualidade:</strong> 100% Pura</p>
+            </div>
+        </div>
+        <button class="btn-alt" onclick="simularScan()">Escanear Lote Agora</button>
+    </section>
+
+    <section id="jogo" class="section">
+        <h2>Eco-Catch: Missão Nutrição</h2>
+        <div class="game-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            <div class="game-overlay">
+                <div id="score">Pontos: 0</div>
+                <button id="start-btn" onclick="startGame()">Jogar</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
