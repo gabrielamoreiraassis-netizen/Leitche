@@ -40,7 +40,7 @@ const canvas = document.getElementById('milkGame');
 const ctx = canvas.getContext('2d');
 let score = 0;
 let gameOn = false;
-let gameSpeed = 2.5; // Começa bem tranquilo
+let gameSpeed = 2.0; // Começa bem tranquilo
 let player = { x: 350, y: 400, w: 100, h: 40, color: '#4ade80' }; 
 let items = [];
 
