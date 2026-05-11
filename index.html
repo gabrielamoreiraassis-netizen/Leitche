@@ -3,75 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOIO-LEITE | Revolução ODS 2</title>
+    <title>GOIOLEITE | Tech & Sustentabilidade</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Fontes Premium -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <!-- Biblioteca de Ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&family=Outfit:wght@300;600;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 <body>
+    <!-- Cursor Customizado para dar o ar de site caro -->
+    <div class="cursor"></div>
 
+    <!-- Navegação Estilizada -->
     <nav class="navbar">
         <div class="logo">GOIO<span>LEITE</span></div>
         <div class="nav-links">
-            <a href="#bio-rastreio">Bio-Rastreio</a>
-            <a href="#calculadora">Impacto</a>
-            <a href="#arena">Arena Gamer</a>
+            <a href="#rastreio">Bio-Rastreio</a>
+            <a href="#impacto">Calculadora</a>
+            <a href="#game-section">Desafio</a>
+            <button class="btn-cert" onclick="alert('Funcionalidade de Certificado: Complete o desafio para liberar!')">Meu Certificado</button>
         </div>
     </nav>
 
-    <section class="hero-premium">
-        <div class="hero-overlay"></div>
+    <!-- Hero Section: O Impacto Visual de Entrada -->
+    <header class="hero">
         <div class="hero-content">
-            <span class="badge">ODS 2: Fome Zero e Agricultura Sustentável</span>
-            <h1>Tecnologia que <span>nutre</span> o campo.</h1>
-            <p>Conectando os produtores de Goioxim ao mercado global com rastreabilidade via código único.</p>
-            <div class="hero-btns">
-                <a href="#bio-rastreio" class="btn-primary">Ver Rastreio</a>
-                <a href="#arena" class="btn-secondary">Desafio do Leite</a>
+            <div class="badge-ods">ODS 2: FOME ZERO & AGRICULTURA</div>
+            <h1 class="reveal-text">A Revolução Digital do <span>Ouro Branco</span></h1>
+            <p>Conectando a força do produtor de Goioxim à tecnologia de ponta para um futuro sustentável e transparente.</p>
+            <div class="scroll-indicator">
+                <span>Explore a Jornada</span>
+                <div class="mouse"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- NOVIDADE 1: BIO-RASTREIO INTERATIVO -->
+    <section id="rastreio" class="section">
+        <div class="container">
+            <div class="glass-card main-card">
+                <h2><i class="ph ph-qr-code"></i> Bio-Rastreio em Tempo Real</h2>
+                <p>Simule a transparência: Digite o código do lote de Goioxim para rastrear a origem exata:</p>
+                <div class="search-box">
+                    <input type="text" id="loteInput" placeholder="Ex: GOI-2026 ou LEITE-01">
+                    <button onclick="rastrearLote()">Rastrear Origem</button>
+                </div>
+                <div id="rastreio-resultado" class="hidden">
+                    <div class="map-sim">
+                        <div class="ping"></div>
+                        <p>Localizado: Goioxim, PR</p>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item"><strong>Fazenda:</strong> <span id="res-fazenda"></span></div>
+                        <div class="info-item"><strong>Produtor:</strong> <span id="res-produtor"></span></div>
+                        <div class="info-item"><strong>Status:</strong> <span class="tag-ods">100% Sustentável</span></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- NOVIDADE 1: CALCULADORA DE IMPACTO -->
-    <section id="calculadora" class="section">
-        <div class="glass-card">
-            <h2>Calculadora de Impacto Goioxim</h2>
-            <p>Selecione quantos litros você consome por mês e veja como isso ajuda a economia local:</p>
-            <div class="calc-input">
-                <input type="range" id="leiteInput" min="1" max="100" value="10">
-                <span id="litrosLabel">10 Litros</span>
-            </div>
-            <div class="calc-results">
-                <div class="res-box">
-                    <h4 id="ajudaEconomia">R$ 0,00</h4>
-                    <span>Injetado na Economia Local</span>
+    <!-- NOVIDADE 2: CALCULADORA DE IMPACTO SOCIAL (O "pulo do gato" do concurso) -->
+    <section id="impacto" class="section alternate">
+        <div class="container">
+            <div class="flex-row">
+                <div class="text-side">
+                    <h2>Sua escolha gera <span>Impacto Social</span></h2>
+                    <p>Ao consumir o leite local de Goioxim, você fortalece famílias reais e reduz a pegada de carbono. Use o simulador ao lado:</p>
                 </div>
-                <div class="res-box">
-                    <h4 id="familiasApoiadas">0</h4>
-                    <span>Famílias Beneficiadas</span>
+                <div class="glass-card calc-card">
+                    <h3>Simulador de Bio-Valor</h3>
+                    <input type="range" id="rangeLeite" min="1" max="100" value="20">
+                    <div class="litros-display"><span id="litrosVal">20</span> L / mês</div>
+                    <div class="grid-stats">
+                        <div class="stat-box">
+                            <h4 id="valorEconomia">R$ 70,00</h4>
+                            <span>Injetado na Economia Local</span>
+                        </div>
+                        <div class="stat-box">
+                            <h4 id="valorCarbono">-15kg</h4>
+                            <span>CO2 Evitado (Transporte)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- NOVIDADE 2: JOGO ARCADE MODERNO -->
-    <section id="arena" class="section">
-        <div class="game-header">
-            <h2>Milk Rush: Edição Goioxim</h2>
-            <p>Use as setas ou deslize para coletar leite puro e evitar impurezas.</p>
-        </div>
-        <div id="game-container">
-            <div id="ui-layer">
-                <div id="score-board">SCORE: <span id="val">0</span></div>
-            </div>
-            <canvas id="gameCanvas"></canvas>
-            <div id="start-overlay">
-                <button onclick="iniciarGame()">DAR PLAY NO FUTURO</button>
+    <!-- NOVIDADE 3: GAME ARCADE IMERSIVO -->
+    <section id="game-section" class="section">
+        <div class="container text-center">
+            <h2>Milk Rush: <span>Goioxim Edition</span></h2>
+            <p>Gerencie a coleta: Pegue o leite puro e evite as bactérias para garantir a saúde da comunidade!</p>
+            <div id="game-canvas-wrapper">
+                <canvas id="milkGame"></canvas>
+                <div id="game-ui">
+                    <div class="score-tag">SCORE: <span id="gameScore">0</span></div>
+                    <div id="start-screen">
+                        <button id="btnStart" onclick="initGame()">INICIAR MISSÃO NUTRIÇÃO</button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
+    <footer>
+        <div class="logo">GOIO<span>LEITE</span></div>
+        <p>Desenvolvido para transformar a Agricultura Familiar através da ODS 2.</p>
+        <div class="footer-links">
+            <span>Goioxim - Paraná</span>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>
