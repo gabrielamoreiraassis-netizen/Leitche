@@ -7,7 +7,7 @@
     --border: rgba(255, 255, 255, 0.1);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     background-color: var(--bg);
