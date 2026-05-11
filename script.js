@@ -35,20 +35,21 @@ range.addEventListener('input', (e) => {
     carbVal.innerText = "-" + (v * 0.6).toFixed(1) + "kg";
 });
 
-// 4. Jogo Milk Rush (Engine Avançada)
+// NOVO JOGO: MILK RUNNER PRO
 const canvas = document.getElementById('milkGame');
 const ctx = canvas.getContext('2d');
 let score = 0;
 let gameOn = false;
-let basket = { x: 350, y: 440, w: 120, h: 15 };
-let items = [];
+let gameSpeed = 5;
+let player = { x: 350, y: 420, w: 80, h: 40, color: '#4ade80' };
+let obstacles = [];
 
 function initGame() {
     document.getElementById('start-screen').style.display = 'none';
     gameOn = true;
     score = 0;
-    items = [];
-    document.getElementById('gameScore').innerText = "0";
+    gameSpeed = 5;
+    obstacles = [];
     animate();
 }
 
@@ -56,52 +57,69 @@ function animate() {
     if(!gameOn) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Desenhar "Cesta" Neon
-    ctx.shadowBlur = 25;
-    ctx.shadowColor = "#4ade80";
-    ctx.fillStyle = "#4ade80";
+    // Efeito de "Estrada" se movendo
+    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.setLineDash([20, 20]);
     ctx.beginPath();
-    ctx.roundRect(basket.x, basket.y, basket.w, basket.h, 10);
+    ctx.moveTo(canvas.width/2, 0);
+    ctx.lineTo(canvas.width/2, canvas.height);
+    ctx.stroke();
+
+    // Desenhar Jogador (Caminhão de Coleta Neon)
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = player.color;
+    ctx.fillStyle = player.color;
+    ctx.beginPath();
+    ctx.roundRect(player.x, player.y, player.w, player.h, 5);
     ctx.fill();
 
-    // Spawn de Itens
-    if(Math.random() < 0.06) {
-        items.push({
+    // Spawn de Obstáculos e Itens
+    if(Math.random() < 0.04) {
+        let isGood = Math.random() > 0.3;
+        obstacles.push({
             x: Math.random() * (canvas.width - 40),
             y: -50,
-            speed: 5 + Math.random() * 5,
-            char: Math.random() > 0.2 ? '🥛' : '🦠',
-            isGood: Math.random() > 0.2
+            w: 40,
+            h: 40,
+            type: isGood ? '🥛' : '🚧',
+            good: isGood
         });
     }
 
-    items.forEach((item, index) => {
-        item.y += item.speed;
-        ctx.shadowBlur = 0;
-        ctx.font = "40px Arial";
-        ctx.fillText(item.char, item.x, item.y);
-
-        // Colisão com o Balde
-        if(item.y > basket.y && item.x > basket.x - 20 && item.x < basket.x + basket.w) {
-            if(item.isGood) {
-                score += 15;
-            } else {
-                score = Math.max(0, score - 50);
-            }
-            document.getElementById('gameScore').innerText = score;
-            items.splice(index, 1);
-        }
+    obstacles.forEach((obj, index) => {
+        obj.y += gameSpeed;
         
-        // Remove itens que saíram da tela
-        if(item.y > 600) items.splice(index, 1);
+        ctx.shadowBlur = 0;
+        ctx.font = "30px Arial";
+        ctx.fillText(obj.type, obj.x, obj.y);
+
+        // Colisão Realista
+        if(obj.y + 30 > player.y && obj.y < player.y + player.h &&
+           obj.x + 30 > player.x && obj.x < player.x + player.w) {
+            
+            if(obj.good) {
+                score += 10;
+                gameSpeed += 0.1; // Fica mais difícil
+                player.color = '#4ade80';
+            } else {
+                score = Math.max(0, score - 20);
+                player.color = '#ff4a4a'; // Pisca vermelho ao bater
+                setTimeout(() => player.color = '#4ade80', 200);
+            }
+            obstacles.splice(index, 1);
+            document.getElementById('gameScore').innerText = score;
+        }
+
+        if(obj.y > 600) obstacles.splice(index, 1);
     });
 
     requestAnimationFrame(animate);
 }
 
-// Controle de Mouse/Touch para o Jogo
+// Controle Suave por Mouse/Touch
 canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    basket.x = Math.max(0, Math.min(canvas.width - basket.w, x - basket.w/2));
+    const targetX = e.clientX - rect.left - player.w/2;
+    // Interpolação para o movimento ser mais fluido (suave)
+    player.x += (targetX - player.x) * 0.2;
 });
