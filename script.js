@@ -1,6 +1,8 @@
 // 1. Efeito do Cursor Customizado
 const cursor = document.querySelector('.cursor');
+
 document.addEventListener('mousemove', (e) => {
+    // Garante que a bolinha apareça na posição do mouse
     cursor.style.left = e.clientX + 'px';
     cursor.style.top = e.clientY + 'px';
 });
