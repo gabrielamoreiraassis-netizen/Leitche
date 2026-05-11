@@ -1,73 +1,65 @@
-// Efeito de Carregamento
-window.addEventListener('load', () => {
-    document.getElementById('loader').style.display = 'none';
-});
+// CALCULADORA DE IMPACTO DINÂMICA
+const slider = document.getElementById('leiteInput');
+const litrosLabel = document.getElementById('litrosLabel');
+const economia = document.getElementById('ajudaEconomia');
+const familias = document.getElementById('familiasApoiadas');
 
-// NOVIDADE: Simulação de Rastreabilidade
-function simularScan() {
-    const status = document.getElementById('status-scan');
-    const info = document.getElementById('info-lote');
-    
-    status.innerText = "Lendo QR Code...";
-    status.style.color = "var(--accent)";
-
-    setTimeout(() => {
-        status.innerText = "Lote Localizado!";
-        info.style.opacity = "1";
-        info.style.transform = "translateY(0)";
-    }, 1500);
+slider.oninput = function() {
+    let valor = this.value;
+    litrosLabel.innerHTML = valor + " Litros";
+    // Lógica fictícia baseada em dados de agricultura familiar
+    let totalInjetado = valor * 3.50; // Preço médio estimado local
+    economia.innerHTML = "R$ " + totalInjetado.toFixed(2);
+    familias.innerHTML = Math.ceil(valor / 15);
 }
 
-// JOGO: Eco-Catch (Melhorado)
+// JOGO MILK RUSH (Engine Melhorada)
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-canvas.width = 800; canvas.height = 500;
-
-let player = { x: 375, y: 430, w: 70, h: 20 };
+let gameOn = false;
 let score = 0;
-let items = [];
-let gameActive = false;
+let basket = { x: 350, y: 440, w: 100, h: 20 };
+let drops = [];
 
-function startGame() {
-    gameActive = true;
+function iniciarGame() {
+    document.getElementById('start-overlay').style.display = 'none';
+    gameOn = true;
     score = 0;
-    items = [];
-    document.getElementById('start-btn').style.display = 'none';
-    update();
+    loop();
 }
 
-function update() {
-    if(!gameActive) return;
-    ctx.clearRect(0,0,800,500);
+function loop() {
+    if (!gameOn) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Jogador (Balde Moderno)
-    ctx.fillStyle = '#004d40';
-    ctx.fillRect(player.x, player.y, player.w, player.h);
+    // Desenhar Balde Neon
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "#4ade80";
+    ctx.fillStyle = "#4ade80";
+    ctx.fillRect(basket.x, basket.y, basket.w, basket.h);
 
-    if(Math.random() < 0.03) {
-        items.push({ x: Math.random()*770, y: 0, type: Math.random() > 0.2 ? '🥛' : '🦠' });
+    if (Math.random() < 0.05) {
+        drops.push({ x: Math.random() * 750, y: 0, speed: 5 + Math.random() * 5, type: Math.random() > 0.15 ? '🥛' : '❌' });
     }
 
-    items.forEach((item, i) => {
-        item.y += 4;
-        ctx.font = "30px Arial";
-        ctx.fillText(item.type, item.x, item.y);
+    drops.forEach((d, i) => {
+        d.y += d.speed;
+        ctx.font = "35px Arial";
+        ctx.fillText(d.type, d.x, d.y);
 
-        // Colisão com o balde
-        if(item.y > 430 && item.x > player.x && item.x < player.x + player.w) {
-            item.type === '🥛' ? score += 10 : score -= 15;
-            items.splice(i, 1);
-            document.getElementById('score').innerText = "Pontos: " + score;
+        // Colisão Precisa
+        if (d.y > 440 && d.x > basket.x && d.x < basket.x + basket.w) {
+            d.type === '🥛' ? score += 20 : score -= 50;
+            drops.splice(i, 1);
+            document.getElementById('val').innerText = score;
         }
     });
 
-    requestAnimationFrame(update);
+    requestAnimationFrame(loop);
 }
 
-// Movimentação
-window.addEventListener('mousemove', (e) => {
+// Controle Suave
+window.onmousemove = (e) => {
     let rect = canvas.getBoundingClientRect();
-    let root = document.documentElement;
-    let mouseX = e.clientX - rect.left - root.scrollLeft;
-    player.x = mouseX - player.w/2;
-});
+    basket.x = e.clientX - rect.left - basket.w/2;
+};
