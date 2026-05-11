@@ -19,10 +19,16 @@ body {
 
 /* Cursor Customizado */
 .cursor {
-    width: 20px; height: 20px; border: 2px solid var(--primary);
-    border-radius: 50%; position: fixed; pointer-events: none;
-    z-index: 9999; transition: transform 0.1s ease;
+    width: 20px; 
+    height: 20px; 
+    border: 2px solid var(--primary);
+    border-radius: 50%; 
+    position: fixed; 
+    pointer-events: none; /* Isso é vital para você conseguir clicar nos botões! */
+    z-index: 9999; 
+    transition: transform 0.1s ease;
     box-shadow: 0 0 15px var(--primary);
+    background-color: rgba(74, 222, 128, 0.2); /* Adicionei uma corzinha para facilitar o teste */
 }
 
 /* Estilo Glassmorphism */
