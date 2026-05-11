@@ -1,68 +1,66 @@
 :root {
-    --primary: #004d40;
-    --accent: #00e676;
-    --milk: #ffffff;
-    --dark: #121212;
+    --bg: #0b0f19;
+    --card: rgba(255, 255, 255, 0.05);
+    --accent: #4ade80;
+    --text-main: #f8fafc;
 }
-
-* { margin: 0; padding: 0; box-box: border-box; }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: #f0f4f8;
-    color: var(--dark);
-    overflow-x: hidden;
+    background-color: var(--bg);
+    color: var(--text-main);
+    font-family: 'Space Grotesk', sans-serif;
+    scroll-behavior: smooth;
 }
 
-header {
-    display: flex; 
-    justify-content: space-between;
-    padding: 20px 8%;
-    background: rgba(255,255,255,0.8);
-    backdrop-filter: blur(10px);
-    position: fixed; width: 100%; top: 0; z-index: 1000;
+/* Navbar Fluida */
+.navbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 5%; position: fixed; width: 90%; top: 0;
+    background: rgba(11, 15, 25, 0.8); backdrop-filter: blur(15px); z-index: 1000;
 }
 
-.logo { font-weight: 800; font-size: 1.5rem; letter-spacing: -1px; }
-.logo span { color: var(--accent); }
+.logo { font-size: 1.8rem; font-weight: 900; color: var(--accent); }
+.logo span { color: white; }
 
-.hero {
-    height: 100vh;
-    background: linear-gradient(135deg, rgba(0,77,64,0.9), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1527156279122-eb193899c9d9?auto=format&fit=crop&w=1920');
-    background-size: cover;
-    display: flex; align-items: center; justify-content: center;
-    color: white; text-align: center;
+/* Hero Section Apple Style */
+.hero-premium {
+    height: 100vh; display: flex; align-items: center; justify-content: center;
+    background-image: url('https://images.unsplash.com/photo-1550989460-0adf9ea622e2?auto=format&fit=crop&w=1350&q=80');
+    background-size: cover; background-position: center; position: relative;
 }
 
-.hero h1 { font-size: 4rem; line-height: 1; margin-bottom: 20px; }
-.hero span { color: var(--accent); }
-
-.section { padding: 80px 10%; text-align: center; }
-
-/* ESTILO DA NOVIDADE: SCANNER */
-.scanner-container {
-    display: flex; justify-content: center; gap: 30px; margin-top: 40px; flex-wrap: wrap;
+.hero-overlay {
+    position: absolute; width: 100%; height: 100%;
+    background: radial-gradient(circle, rgba(11,15,25,0.6) 0%, rgba(11,15,25,1) 100%);
 }
 
-.scanner-box {
-    width: 280px; height: 180px; border: 4px solid var(--primary);
-    border-radius: 15px; position: relative; overflow: hidden;
-    background: #e0e0e0; display: flex; align-items: center; justify-content: center;
+.hero-content { z-index: 10; text-align: center; max-width: 800px; }
+.hero-content h1 { font-size: 5rem; font-weight: 900; letter-spacing: -2px; line-height: 1; }
+.hero-content span { color: var(--accent); }
+
+/* Glassmorphism Card */
+.glass-card {
+    background: var(--card); border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px); border-radius: 30px; padding: 50px;
+    max-width: 900px; margin: 100px auto;
 }
 
-.line {
-    width: 100%; height: 2px; background: var(--accent);
-    position: absolute; top: 0; animation: scan 2s infinite;
+/* Game Style */
+#game-container {
+    width: 100%; max-width: 800px; height: 500px; margin: 0 auto;
+    position: relative; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 0 50px rgba(74, 222, 128, 0.2);
 }
 
-@keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+canvas { background: #0f172a; width: 100%; height: 100%; }
 
-.info-card {
-    background: white; padding: 30px; border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    opacity: 0; transform: translateY(20px); transition: 0.5s;
+#start-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center;
 }
 
-/* JOGO ESTILIZADO */
-.game-wrapper { position: relative; border-radius: 30px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
-canvas { background: linear-gradient(#81d4fa, #e1f5fe); width: 100%; max-width: 800px; display: block; margin: 0 auto; }
+button {
+    background: var(--accent); color: var(--bg); border: none;
+    padding: 15px 40px; border-radius: 50px; font-weight: 700; cursor: pointer;
+    transition: 0.3s;
+}
