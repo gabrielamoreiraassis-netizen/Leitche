@@ -35,21 +35,22 @@ range.addEventListener('input', (e) => {
     carbVal.innerText = "-" + (v * 0.6).toFixed(1) + "kg";
 });
 
-// NOVO JOGO: MILK RUNNER PRO
+// JOGO MILK RUNNER PRO - VERSÃO CALIBRADA
 const canvas = document.getElementById('milkGame');
 const ctx = canvas.getContext('2d');
 let score = 0;
 let gameOn = false;
-let gameSpeed = 5;
-let player = { x: 350, y: 420, w: 80, h: 40, color: '#4ade80' };
+let gameSpeed = 3; // Começa mais devagar para ser justo
+let player = { x: 350, y: 420, w: 100, h: 40, color: '#4ade80' }; // Aumentei a largura
 let obstacles = [];
 
 function initGame() {
     document.getElementById('start-screen').style.display = 'none';
     gameOn = true;
     score = 0;
-    gameSpeed = 5;
+    gameSpeed = 3; // Reset da velocidade
     obstacles = [];
+    document.getElementById('gameScore').innerText = "0";
     animate();
 }
 
@@ -57,7 +58,7 @@ function animate() {
     if(!gameOn) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Efeito de "Estrada" se movendo
+    // Estrada com movimento
     ctx.strokeStyle = "rgba(255,255,255,0.1)";
     ctx.setLineDash([20, 20]);
     ctx.beginPath();
@@ -65,22 +66,21 @@ function animate() {
     ctx.lineTo(canvas.width/2, canvas.height);
     ctx.stroke();
 
-    // Desenhar Jogador (Caminhão de Coleta Neon)
-    ctx.shadowBlur = 15;
+    // Desenhar Jogador (Balde/Caminhão Neon)
+    ctx.shadowBlur = 20;
     ctx.shadowColor = player.color;
     ctx.fillStyle = player.color;
     ctx.beginPath();
-    ctx.roundRect(player.x, player.y, player.w, player.h, 5);
+    ctx.roundRect(player.x, player.y, player.w, player.h, 10);
     ctx.fill();
 
-    // Spawn de Obstáculos e Itens
-    if(Math.random() < 0.04) {
-        let isGood = Math.random() > 0.3;
+    // Spawn controlado
+    if(Math.random() < 0.03) {
+        let isGood = Math.random() > 0.25;
         obstacles.push({
-            x: Math.random() * (canvas.width - 40),
+            x: Math.random() * (canvas.width - 50),
             y: -50,
-            w: 40,
-            h: 40,
+            size: 40,
             type: isGood ? '🥛' : '🚧',
             good: isGood
         });
@@ -90,36 +90,40 @@ function animate() {
         obj.y += gameSpeed;
         
         ctx.shadowBlur = 0;
-        ctx.font = "30px Arial";
+        ctx.font = "35px Arial";
         ctx.fillText(obj.type, obj.x, obj.y);
 
-        // Colisão Realista
-        if(obj.y + 30 > player.y && obj.y < player.y + player.h &&
-           obj.x + 30 > player.x && obj.x < player.x + player.w) {
+        // COLISÃO MELHORADA (Área maior para facilitar a coleta)
+        if(obj.y + 20 > player.y && obj.y < player.y + player.h &&
+           obj.x + 35 > player.x && obj.x < player.x + player.w) {
             
             if(obj.good) {
                 score += 10;
-                gameSpeed += 0.1; // Fica mais difícil
+                gameSpeed += 0.05; // Aceleração bem sutil
                 player.color = '#4ade80';
+                // Efeito sonoro visual (opcional)
+                ctx.fillStyle = "white";
+                ctx.fillText("+10", player.x, player.y - 20);
             } else {
-                score = Math.max(0, score - 20);
-                player.color = '#ff4a4a'; // Pisca vermelho ao bater
-                setTimeout(() => player.color = '#4ade80', 200);
+                score = Math.max(0, score - 30);
+                player.color = '#ff4a4a'; 
+                setTimeout(() => player.color = '#4ade80', 300);
             }
             obstacles.splice(index, 1);
             document.getElementById('gameScore').innerText = score;
         }
 
-        if(obj.y > 600) obstacles.splice(index, 1);
+        // Limpeza de memória
+        if(obj.y > canvas.height) obstacles.splice(index, 1);
     });
 
     requestAnimationFrame(animate);
 }
 
-// Controle Suave por Mouse/Touch
+// Controle Suave (ajustado para ser instantâneo mas fluido)
 canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
     const targetX = e.clientX - rect.left - player.w/2;
-    // Interpolação para o movimento ser mais fluido (suave)
-    player.x += (targetX - player.x) * 0.2;
+    // Movimento mais responsivo
+    player.x = Math.max(0, Math.min(canvas.width - player.w, targetX));
 });
