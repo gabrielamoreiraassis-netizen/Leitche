@@ -35,21 +35,23 @@ range.addEventListener('input', (e) => {
     carbVal.innerText = "-" + (v * 0.6).toFixed(1) + "kg";
 });
 
-// JOGO MILK RUNNER PRO - VERSÃO CALIBRADA
+// JOGO MILK RUNNER - VERSÃO FINAL ULTRA SENSÍVEL
 const canvas = document.getElementById('milkGame');
 const ctx = canvas.getContext('2d');
 let score = 0;
 let gameOn = false;
-let gameSpeed = 3; // Começa mais devagar para ser justo
-let player = { x: 350, y: 420, w: 100, h: 40, color: '#4ade80' }; // Aumentei a largura
-let obstacles = [];
+let gameSpeed = 2.5; // Começa bem tranquilo
+let player = { x: 350, y: 400, w: 100, h: 40, color: '#4ade80' }; 
+let items = [];
 
 function initGame() {
-    document.getElementById('start-screen').style.display = 'none';
+    const startOverlay = document.getElementById('start-screen');
+    if(startOverlay) startOverlay.style.display = 'none';
+    
     gameOn = true;
     score = 0;
-    gameSpeed = 3; // Reset da velocidade
-    obstacles = [];
+    gameSpeed = 2.5;
+    items = [];
     document.getElementById('gameScore').innerText = "0";
     animate();
 }
@@ -58,72 +60,66 @@ function animate() {
     if(!gameOn) return;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Estrada com movimento
-    ctx.strokeStyle = "rgba(255,255,255,0.1)";
-    ctx.setLineDash([20, 20]);
-    ctx.beginPath();
-    ctx.moveTo(canvas.width/2, 0);
-    ctx.lineTo(canvas.width/2, canvas.height);
-    ctx.stroke();
-
-    // Desenhar Jogador (Balde/Caminhão Neon)
-    ctx.shadowBlur = 20;
+    // Desenha o Jogador (O Balde Neon)
+    ctx.shadowBlur = 15;
     ctx.shadowColor = player.color;
     ctx.fillStyle = player.color;
     ctx.beginPath();
-    ctx.roundRect(player.x, player.y, player.w, player.h, 10);
+    ctx.roundRect(player.x, player.y, player.w, player.h, 8);
     ctx.fill();
+    ctx.shadowBlur = 0;
 
-    // Spawn controlado
+    // Criar novos itens (Leite ou Obstáculo)
     if(Math.random() < 0.03) {
-        let isGood = Math.random() > 0.25;
-        obstacles.push({
-            x: Math.random() * (canvas.width - 50),
+        items.push({
+            x: Math.random() * (canvas.width - 40),
             y: -50,
-            size: 40,
-            type: isGood ? '🥛' : '🚧',
-            good: isGood
+            type: Math.random() > 0.2 ? '🥛' : '🚧',
+            isGood: Math.random() > 0.2
         });
     }
 
-    obstacles.forEach((obj, index) => {
-        obj.y += gameSpeed;
-        
-        ctx.shadowBlur = 0;
-        ctx.font = "35px Arial";
-        ctx.fillText(obj.type, obj.x, obj.y);
+    // Movimentar e desenhar itens
+    for (let i = items.length - 1; i >= 0; i--) {
+        let item = items[i];
+        item.y += gameSpeed;
 
-        // COLISÃO MELHORADA (Área maior para facilitar a coleta)
-        if(obj.y + 20 > player.y && obj.y < player.y + player.h &&
-           obj.x + 35 > player.x && obj.x < player.x + player.w) {
+        ctx.font = "40px Arial";
+        ctx.fillText(item.type, item.x, item.y);
+
+        // Lógica de Colisão Simples e Eficaz
+        // Se a base do emoji encostar no topo do balde
+        if (item.y > player.y && item.y < player.y + player.h &&
+            item.x + 30 > player.x && item.x < player.x + player.w) {
             
-            if(obj.good) {
+            if (item.type === '🥛') {
                 score += 10;
-                gameSpeed += 0.05; // Aceleração bem sutil
-                player.color = '#4ade80';
-                // Efeito sonoro visual (opcional)
-                ctx.fillStyle = "white";
-                ctx.fillText("+10", player.x, player.y - 20);
+                gameSpeed += 0.05; // Fica um tiquinho mais rápido
+                player.color = '#4ade80'; // Pisca Verde
             } else {
-                score = Math.max(0, score - 30);
-                player.color = '#ff4a4a'; 
-                setTimeout(() => player.color = '#4ade80', 300);
+                score = Math.max(0, score - 25);
+                player.color = '#ff4a4a'; // Pisca Vermelho
+                setTimeout(() => player.color = '#4ade80', 200);
             }
-            obstacles.splice(index, 1);
+            
             document.getElementById('gameScore').innerText = score;
+            items.splice(i, 1); // Remove o item coletado
+            continue;
         }
 
-        // Limpeza de memória
-        if(obj.y > canvas.height) obstacles.splice(index, 1);
-    });
+        // Remove se sair da tela
+        if (item.y > canvas.height) {
+            items.splice(i, 1);
+        }
+    }
 
     requestAnimationFrame(animate);
 }
 
-// Controle Suave (ajustado para ser instantâneo mas fluido)
+// Controle do mouse sem atraso
 canvas.addEventListener('mousemove', (e) => {
     const rect = canvas.getBoundingClientRect();
-    const targetX = e.clientX - rect.left - player.w/2;
-    // Movimento mais responsivo
-    player.x = Math.max(0, Math.min(canvas.width - player.w, targetX));
+    const mouseX = e.clientX - rect.left;
+    // Centraliza o balde no mouse e trava nas bordas
+    player.x = Math.max(0, Math.min(canvas.width - player.w, mouseX - player.w/2));
 });
